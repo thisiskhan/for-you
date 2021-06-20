@@ -19,7 +19,8 @@ class _LandingPageState extends State<LandingPage> {
       body: Stack(
         children: [
           bogyColor(),
-          Provider.of<LanginHelpers>(context, listen: false).bodyImage(context),
+          Provider.of<LanginHelpers>(context, listen: false)
+              .bodyImage(context),
           Provider.of<LanginHelpers>(context, listen: false)
               .tagLineText(context),
           Provider.of<LanginHelpers>(context, listen: false)

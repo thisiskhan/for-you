@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,11 @@ class Authentication with ChangeNotifier {
 
   Future registerWithEmail(String email, String password) async {
     UserCredential userCredential = await firebaseAuth
-        .createUserWithEmailAndPassword(email: email, password: password);
+        .createUserWithEmailAndPassword(email: email, password: password)
+        .then((value) {
+          
+      return value;
+    });
 
     User? user = userCredential.user;
     userUid = user!.uid;
