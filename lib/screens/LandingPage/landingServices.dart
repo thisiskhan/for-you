@@ -8,12 +8,13 @@ import 'package:provider/provider.dart';
 
 class LandingService with ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController usernameController = TextEditingController();
+
   final TextEditingController passwordController = TextEditingController();
   ConstantColors constantColors = ConstantColors();
 
   signInSheet(BuildContext context) {
     return showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
         builder: (context) {
           return SingleChildScrollView(
@@ -91,26 +92,33 @@ class LandingService with ChangeNotifier {
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 10, vertical: 30),
-                                child: RawMaterialButton(
-                                  fillColor: constantColors.blueColor,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  onPressed: () {
-                                    Provider.of<Authentication>(context)
-                                        .loginWithEmail(emailController.text,
-                                            passwordController.text);
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "SignIn",
-                                      style: TextStyle(
-                                          color: constantColors.whiteColor,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ),
+                                child: FloatingActionButton(
+                                    backgroundColor: constantColors.blueColor,
+                                    onPressed: () {
+                                      if (emailController.text.isNotEmpty &&
+                                          passwordController.text.length > 6) {
+                                        Provider.of<Authentication>(context,
+                                                listen: false)
+                                            .loginWithEmail(
+                                                emailController.text,
+                                                passwordController.text)
+                                            .whenComplete(() {
+                                          Navigator.pushReplacement(
+                                              context,
+                                              PageTransition(
+                                                  child: Home(),
+                                                  type:
+                                                      PageTransitionType.fade));
+                                        });
+                                      } else {
+                                        warningText(
+                                            context, "something went wrong!");
+                                      }
+                                    },
+                                    child: Icon(
+                                      Icons.done,
+                                      color: constantColors.whiteColor,
+                                    )),
                               ),
                             ],
                           ),
@@ -132,6 +140,7 @@ class LandingService with ChangeNotifier {
 
   signUpSheet(BuildContext context) {
     return showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
         builder: (context) {
           return SingleChildScrollView(
@@ -152,6 +161,17 @@ class LandingService with ChangeNotifier {
                     child: Container(
                       child: Wrap(
                         children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: NetworkImage(
+                                    "https://avatars.githubusercontent.com/u/72858063?s=60&v=4"),
+                                radius: 40,
+                                backgroundColor: Colors.black
+                              ),
+                            ],
+                          ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: TextField(
@@ -207,36 +227,35 @@ class LandingService with ChangeNotifier {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 30),
-                                child: RawMaterialButton(
-                                  fillColor: constantColors.blueColor,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  onPressed: () {
-                                    Provider.of<Authentication>(context)
-                                        .registerWithEmail(emailController.text,
-                                            passwordController.text)
-                                        .then((value) {
-                                      Navigator.pushReplacement(
-                                          context,
-                                          PageTransition(
-                                              child: Home(),
-                                              type: PageTransitionType.fade));
-                                    });
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "SignUp",
-                                      style: TextStyle(
-                                          color: constantColors.whiteColor,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 30),
+                                  child: FloatingActionButton(
+                                    onPressed: () {
+                                      if (emailController.text.isNotEmpty) {
+                                        Provider.of<Authentication>(context,
+                                                listen: false)
+                                            .registerWithEmail(
+                                                emailController.text,
+                                                passwordController.text)
+                                            .then((value) {
+                                          Navigator.pushReplacement(
+                                              context,
+                                              PageTransition(
+                                                  child: Home(),
+                                                  type:
+                                                      PageTransitionType.fade));
+                                        });
+                                      } else {
+                                        warningText(
+                                            context, "Fill all the data");
+                                      }
+                                    },
+                                    backgroundColor: constantColors.blueColor,
+                                    child: Icon(
+                                      Icons.done,
+                                      color: constantColors.whiteColor,
                                     ),
-                                  ),
-                                ),
-                              ),
+                                  )),
                             ],
                           ),
                         ],
@@ -250,6 +269,26 @@ class LandingService with ChangeNotifier {
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(15),
                       topRight: Radius.circular(15))),
+            ),
+          );
+        });
+  }
+
+  warningText(BuildContext context, String warning) {
+    return showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.1,
+            width: MediaQuery.of(context).size.width,
+            child: Center(
+              child: Text(
+                warning,
+                style: TextStyle(
+                    color: constantColors.whiteColor,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold),
+              ),
             ),
           );
         });

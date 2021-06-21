@@ -2,9 +2,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:foryou/constants/Constantcolors.dart';
 import 'package:foryou/screens/LandingPage/landingServices.dart';
+import 'package:foryou/screens/LandingPage/landingUtils.dart';
 import 'package:foryou/screens/LandingPage/landinghelpers.dart';
 import 'package:foryou/screens/SplashScreen/splashscreen.dart';
 import 'package:foryou/services/Authentication.dart';
+import 'package:foryou/services/FirebaseOperations.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -30,6 +32,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => LanginHelpers()),
         ChangeNotifierProvider(create: (_) => LandingService()),
         ChangeNotifierProvider(create: (_) => Authentication()),
+        ChangeNotifierProvider(create: (_) => FirebaseOperations()),
+        ChangeNotifierProvider(create: (_) => LandingUtils()),
       ],
     );
   }
