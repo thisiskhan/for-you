@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:foryou/constants/Constantcolors.dart';
+import 'package:foryou/screens/Home/home.dart';
 import 'package:foryou/screens/LandingPage/landingPage.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -11,6 +12,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
   ConstantColors constantColors = ConstantColors();
   @override
   void initState() {
